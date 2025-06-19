@@ -2,13 +2,16 @@ name: Daily POST Request to Hugging Face
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at 0 AM UTC (2:00 AM in summer and 1:00 AM in winter croatian time)
+    - cron: '12 14 * * *'  # Runs daily at 0 AM UTC (2:00 AM in summer and 1:00 AM in winter croatian time)
   workflow_dispatch:      # Allows manual run from the Actions tab too
 
 jobs:
   trigger_post:
     runs-on: ubuntu-latest
     steps:
-      - name: Send POST request to Hugging Face Space
+      - name: Send POST request to Hugging Face Space and log response
         run: |
-          curl -X POST http://127.0.0.1:8081/sync
+          RESPONSE=$(curl -s -X POST http://127.0.0.1:8081/sync)
+          echo "Response from server:"
+          echo "$RESPONSE"
+
