@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Send POST request to Hugging Face Space and log response
         run: |
-          RESPONSE=$(curl -s -X POST http://127.0.0.1:8081/sync)
+          RESPONSE=$(curl -s -X POST https://ritgptzsm-ritgptzsm.hf.space/sync)
           echo "Response from server:"
           echo "$RESPONSE"
 
