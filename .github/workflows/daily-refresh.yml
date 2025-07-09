@@ -2,7 +2,7 @@ name: Daily POST Request to Hugging Face
 
 on:
   schedule:
-    - cron: '21 14 * * *'  # Runs daily at 0 AM UTC (2:00 AM in summer and 1:00 AM in winter croatian time)
+    - cron: '17 17 * * *'  # Runs daily at 0 AM UTC (2:00 AM in summer and 1:00 AM in winter croatian time)
   workflow_dispatch:      # Allows manual run from the Actions tab too
 
 jobs:
