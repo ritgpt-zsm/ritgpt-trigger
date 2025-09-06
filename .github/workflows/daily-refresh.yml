@@ -2,7 +2,7 @@ name: Daily POST Request to Hugging Face
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at 0 AM UTC (2:00 AM in summer and 1:00 AM in winter croatian time)
+    - cron: '0 0 * * *'  # Runs daily at 0 AM UTC (2:00 AM summer, 1:00 AM winter Croatian time)
   workflow_dispatch:      # Allows manual run from the Actions tab too
 
 jobs:
@@ -11,7 +11,22 @@ jobs:
     steps:
       - name: Send POST request to Hugging Face Space and log response
         run: |
-          RESPONSE=$(curl -s -X POST https://ritgptzsm-ritgptzsm.hf.space/sync)
+          echo "Sending POST request to Hugging Face Space..."
+          # Use curl with verbose output, retry logic, and a longer timeout to allow space to wake up
+          RESPONSE=$(curl -s -X POST "https://ritgptzsm-ritgptzsm.hf.space/sync" \
+            --retry 5 \
+            --retry-delay 10 \
+            --max-time 60 \
+            -w "\nHTTP Status: %{http_code}\n" \
+            -v)
+          
+          EXIT_CODE=$?
+          echo "Curl exit code: $EXIT_CODE"
           echo "Response from server:"
           echo "$RESPONSE"
 
+          # Fail workflow if curl failed
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "❌ POST request failed with exit code $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
